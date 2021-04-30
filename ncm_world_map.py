@@ -1,4 +1,4 @@
-#!/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_highlights/venv python
+#!/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/venv python
 # ------------------------------------------------------------------------------
 # Script name:  ncm_world_map.py
 #
@@ -10,8 +10,9 @@
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # Create the environment with virtualenv --system-site-packages . Then, activate the virtualenv and when you want things installed in the virtualenv rather than the system python, use pip install --ignore-installed or pip install -I . That way pip will install what you've requested locally even though a system-wide version exists. Your python interpreter will look first in the virtualenv's package directory, so those packages should shadow the global ones.
-# python -m venv --system-site-packages /Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_highlights/venv
+# python -m venv --system-site-packages /Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/venv
 # conda activate geo_env # (Geopandas does not like pip, so had to create a seperate conda environment for geopandas. Fun times!)
+# source /Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/venv/bin/activate
 #
 # Install globally
 # pip install pandas
@@ -112,7 +113,7 @@ for i in range(len(df)):
     df.at[i, 'Longitude'] = Longitude
 
 
-# ------------------------------ Draw world map ------------------------------------
+# ------------------------------ Draw map with member numbers as clustered annotations ------------------------------------
 
 # Create a world map to show distributions of users
 # empty map
@@ -136,10 +137,11 @@ for i in range(len(df)):
 # show the map
 world_map
 
-
-# ------------------------------ Draw NEW world map WITHOUT nonmember states ------------------------------------
-
-# ------------------------------ Remove all countries that have no members ----------
+# ------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------ Draw map with countries colored according to member number ------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------
+#
+# ------------------------------ Find countries that have no members ----------
 # We import the geoJSON file.
 world_geo = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/world-countries.json'
 
@@ -162,8 +164,7 @@ missing_states
 
 # geoJSON_df_clean = geoJSON_df.loc[keep_states]
 
-
-# ------------------------------ Set non-member states to zero ------------------------------------
+# ------------------------------ Set non-member states to nan ------------------------------------
 # intialise data of lists.
 additional_entries = {'CountryName': None,
                       'Members': np.nan,
@@ -179,6 +180,7 @@ df2 = pd.DataFrame(additional_entries)
 
 df = df.append(df2, ignore_index=True)
 
+df.dropna().to_csv('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/ncm_member_counts.csv')
 
 # ------------------------------ Plot with bins ------------------------------------
 
@@ -210,7 +212,7 @@ folium.LayerControl().add_to(m)
 
 # m
 
-m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_members_map_bins.html')
+m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/figures/ncm_members_map_bins.html')
 
 
 # ------------------------------ Plot with log10 ------------------------------------
@@ -233,7 +235,7 @@ folium.Choropleth(
     nan_fill_opacity=0.3,
     # threshold_scale=100
 ).add_to(m)
-m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_members_map_log10.html')
+m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/figures/ncm_members_map_log10.html')
 
 
 # ------------------------------ Plot with log10 and member numbers ------------------------------------
@@ -296,7 +298,7 @@ for i in range(len(df.dropna())):
 
 # m
 
-m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_members_map_log10_with_numbers.html')
+m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/figures/ncm_members_map_log10_with_numbers.html')
 
 
 # ------------------------------ Plot with log10 and member numbers as pop-up ------------------------------------
@@ -347,4 +349,4 @@ for i in range(len(df.dropna())):
 
 # m
 
-m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_members_map_log10_interactive.html')
+m.save('/Users/CN/Documents/Conferences/NCM21/ncm_highlights_article/ncm_world_map/figures/ncm_members_map_log10_interactive.html')
