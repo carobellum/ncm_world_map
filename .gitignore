@@ -1,2 +1,7 @@
+# CoreNLP Server property files
+*.props
+
+# Environments
+__pycache__/
 .vscode/
 venv/
